@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Play Rammstein's original 1997 Asche zu Asche Windows game in your browser.">
+  <title>Asche zu Asche — Rammstein's 1997 game</title>
+  <style>
+    :root { color-scheme: dark; font: 16px/1.6 system-ui, sans-serif; background: #131414; color: #deded7; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    main { max-width: 1040px; padding: 30px 22px 48px; margin: auto; }
+    .eyebrow { color: #aeaa87; letter-spacing: .16em; font-size: .75rem; text-transform: uppercase; margin: 0; }
+    h1 { font-size: clamp(2rem, 6vw, 3.4rem); line-height: 1.1; margin: 10px 0 14px; }
+    .intro { color: #afafa7; margin-bottom: 24px; }
+    a { color: #d3c998; }
+    #game { background: #000; border: 1px solid #555649; width: 100%; aspect-ratio: 4 / 3; }
+    #game iframe { display: block; border: 0; width: 100%; height: 100%; }
+    #game:fullscreen { border: 0; height: 100%; aspect-ratio: auto; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 16px 0; }
+    button { font: inherit; cursor: pointer; color: #eee; background: #33362d; border: 1px solid #6c6d58; padding: 8px 18px; border-radius: 4px; }
+    button:hover { background: #454939; }
+    button:focus-visible, a:focus-visible { outline: 3px solid #c9c482; outline-offset: 3px; }
+    #status { font-size: .9rem; color: #c8c39c; }
+    section { border-top: 1px solid #3a3b32; margin-top: 28px; padding-top: 10px; }
+    h2 { font-size: 1.25rem; }
+    .controls { display: flex; flex-wrap: wrap; gap: 12px 30px; padding: 0; list-style: none; }
+    kbd { font: inherit; padding: 2px 7px; border: 1px solid #676858; border-bottom-width: 3px; border-radius: 4px; background: #23251e; }
+    footer { margin-top: 32px; color: #93968b; font-size: .85rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">Rammstein · 1997 · Browser preservation</p>
+      <h1>Asche zu Asche</h1>
+      <p class="intro">The original Windows game from the <em>Das Modell</em> single.</p>
+    </header>
+    <div id="game"></div>
+    <audio id="music" src="/audio/asche-zu-asche.mp3" preload="none" loop></audio>
+    <div class="toolbar">
+      <button id="play" type="button">Load game</button>
+      <button id="fullscreen" type="button">Fullscreen</button>
+      <button id="restart" type="button">Restart game</button>
+      <button id="music-toggle" type="button" aria-controls="music">Disable music</button>
+      <button id="crash-report" type="button" hidden>Download crash report</button>
+      <label for="volume">Volume</label>
+      <input id="volume" type="range" min="0" max="100" value="70">
+      <output id="volume-value" for="volume">70%</output>
+      <span id="status" role="status"></span>
+    </div>
+    <section aria-labelledby="controls-title">
+      <h2 id="controls-title">How to play</h2>
+      <ul class="controls">
+        <li><kbd>←</kbd> <kbd>→</kbd> Move</li>
+        <li><kbd>↑</kbd> Jump</li>
+        <li><kbd>Space</kbd> Fire</li>
+        <li><kbd>Esc</kbd> Quit game</li>
+      </ul>
+      <p>Load the game, wait for the title screen, then click it to start. Hold the keys to move and fire. A desktop keyboard is recommended.</p>
+      <p>Use the volume slider to adjust all sound; set it to 0 to mute. The background song plays quietly beneath the effects. Disable music turns off just the song.</p>
+      <p>Explore three levels, shoot the floating band-member faces to open the way forward, and survive to the end. Finish quickly and conserve ammunition: every second costs 10 points, while each unused shot earns 1,000 bonus points.</p>
+    </section>
+    <footer>
+      <p>Original game by Oliver Czok for Motor Music, © 1997. Preserved from the <a href="https://www.rammsteinworld.com/en/multimedia/downloads">Rammstein World download</a>. Game rights belong to their respective owners.</p>
+      <p>Runs locally in your browser with <a href="https://www.boxedwine.org/">Boxedwine</a> and Wine. The first load downloads the emulator and its runtime.</p>
+      <p>The original email/fax high-score promotion has ended. Its historical submission instructions are part of the original game.</p>
+      <p>Also play <a href="https://benzin.rammwiki.mrzetti.com/">Benzin</a>.</p>
+    </footer>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>

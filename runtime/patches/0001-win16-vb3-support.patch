@@ -1,0 +1,158 @@
+diff --git a/src/09a-handlers.wat b/src/09a-handlers.wat
+index 1f7cedd..ca2a4a6 100644
+--- a/src/09a-handlers.wat
++++ b/src/09a-handlers.wat
+@@ -8896,9 +8896,7 @@
+             (i32.and
+               (i32.ne (i32.and (call $wnd_get_style (local.get $arg0))
+                                (i32.const 0x40000000)) (i32.const 0))
+-              (i32.or
+-                (global.get $code16)
+-                (i32.and
++              (i32.and
+                   (i32.ne (i32.and (call $nc_flags_test (local.get $arg0))
+                                    (i32.const 2)) (i32.const 0))
+                   ;; A Win16 custom child (VB ThunderPictureBox et al.) can
+@@ -8909,7 +8907,7 @@
+                   ;; their own path rather than the Win16 BeginPaint thunk, and
+                   ;; first exposure is already erased when the parent becomes
+                   ;; visible.
+-                  (i32.eqz (global.get $win16_beginpaint_call32)))))))
++                  (i32.eqz (global.get $win16_beginpaint_call32))))))
+       (then
+         (call $nc_flags_clear (local.get $arg0) (i32.const 2))
+         (local.set $desc (global.get $GDI_LINE_DESC))
+diff --git a/src/09e-win16-api.wat b/src/09e-win16-api.wat
+index dfe1cd2..bc4b67d 100644
+--- a/src/09e-win16-api.wat
++++ b/src/09e-win16-api.wat
+@@ -3110,6 +3110,22 @@
+       (then (call $win16_GetVDMPointer32W) (return (i32.const 1))))
+     (if (i32.eq (local.get $ordinal) (i32.const 517))
+       (then (call $win16_CallProc32W) (return (i32.const 1))))
++    ;; DOS3CALL — a Windows program asking for INT 21h by name. The registers
++    ;; carry the function exactly as the interrupt would (AH the service), and
++    ;; there is no Pascal frame to pop, so the return takes no argument bytes.
++    ;; Visual Basic 3 reaches its file and clock services this way.
++    (if (i32.eq (local.get $ordinal) (i32.const 102))
++      (then (call $win16_dos_int21)
++            (call $win16_api_return (i32.const 0))
++            (return (i32.const 1))))
++    ;; SETHANDLECOUNT — resize the DOS file-handle table. The VFS here is not
++    ;; descriptor-based, so there is nothing to resize; report the count the
++    ;; caller asked for, which is what KERNEL16 returns. Visual Basic 3 calls
++    ;; this once during runtime startup, before it opens anything.
++    (if (i32.eq (local.get $ordinal) (i32.const 199))
++      (then (call $win16_local_identity (i32.const 2)
++              (call $win16_arg16 (i32.const 0)))
++            (return (i32.const 1))))
+     (if (i32.eq (local.get $ordinal) (i32.const 131))
+       (then (call $win16_GetDOSEnvironment) (return (i32.const 1))))
+     (if (i32.eq (local.get $ordinal) (i32.const 134))
+@@ -4798,6 +4814,19 @@
+         (global.set $eax (call $win16_h16 (global.get $eax)))
+         (call $win16_api_return (i32.const 0))
+         (return (i32.const 1))))
++    ;; USER.237 GetUpdateRgn(hWnd, hRgn, bErase) copies the pending paint
++    ;; rectangle into the caller's region; the shared handler owns that state.
++    (if (i32.eq (local.get $ordinal) (i32.const 237))
++      (then (call $win16_GetUpdateRgn) (return (i32.const 1))))
++    ;; USER.59 SetActiveWindow(hWnd) — Visual Basic raises Form_Activate from
++    ;; the WM_ACTIVATE this sends, and a VB form's activation code (including a
++    ;; game arming its Timers) runs there.
++    (if (i32.eq (local.get $ordinal) (i32.const 59))
++      (then (call $win16_SetActiveWindow) (return (i32.const 1))))
++    ;; USER.287 GetLastActivePopup(hWnd) — VB controls ask which popup is
++    ;; active; unrecognised, it stops VB's control initialization.
++    (if (i32.eq (local.get $ordinal) (i32.const 287))
++      (then (call $win16_GetLastActivePopup) (return (i32.const 1))))
+     ;; USER.58 GetClassName(hWnd, lpClassName, nMaxCount) -> its length. Tic
+     ;; Tac Drop asks every window it made what class it is while wiring up its
+     ;; form.
+@@ -5942,15 +5971,17 @@
+           (if (call $win16_is_far_proc (local.get $proc))
+             (then
+               (call $nc_flags_set (local.get $child) (i32.const 7))
+-              ;; Give the child its background at the moment it becomes
+-              ;; exposed. Deferring the erase until the first BeginPaint can
+-              ;; invert Win16/VB's paint order and wipe custom child contents
+-              ;; that were already drawn into their visible client surface.
+-              (if (call $wnd_get_bg_brush (local.get $child))
+-                (then
+-                  (drop (call $host_erase_background (local.get $child)
+-                    (call $wnd_get_bg_brush (local.get $child))))
+-                  (call $nc_flags_clear (local.get $child) (i32.const 2))))))
++              ;; Hand the erase to the window procedure rather than painting its
++              ;; class brush here. A Win16 app that paints its scene in
++              ;; WM_ERASEBKGND (every Visual Basic form) must receive the
++              ;; message — painting the brush directly replaces its scene with
++              ;; the class colour, and the child's window DC only becomes
++              ;; paintable once the ancestor being shown made it visible.
++              ;; Posting also keeps DefWindowProc's own class-brush erase for
++              ;; windows whose class owns the background.
++              (drop (call $post_queue_push (local.get $child) (i32.const 0x0014)
++                (i32.add (local.get $child) (i32.const 0x40000)) (i32.const 0)))
++              (call $nc_flags_clear (local.get $child) (i32.const 2))))
+           (call $win16_rearm_visible_child_erases (local.get $child))))
+       (local.set $slot (i32.add (local.get $slot) (i32.const 1)))
+       (br $scan))))
+@@ -6060,7 +6091,16 @@
+         (if (i32.eqz (local.get $was_visible))
+           (then (call $win16_rearm_visible_child_erases (local.get $hwnd))))
+         (global.set $paint_pending (i32.const 1))
+-        (call $invalidate_hwnd (local.get $hwnd)))
++        (call $invalidate_hwnd (local.get $hwnd))
++        ;; Showing a top-level form makes it the active window on Windows, and
++        ;; Visual Basic's Form_Activate — where a form's activation code runs —
++        ;; is raised from WM_ACTIVATE. The engine promoted only the first shown
++        ;; top-level; every later form was shown without ever being activated.
++        (if (i32.and
++              (i32.eqz (local.get $was_visible))
++              (i32.and (i32.eqz (call $wnd_get_parent (local.get $hwnd)))
++                (call $win16_is_far_proc (call $wnd_table_get (local.get $hwnd)))))
++          (then (drop (call $active_window_transition (local.get $hwnd))))))
+       (else
+         (drop (call $wnd_set_style (local.get $hwnd)
+           (i32.and (call $wnd_get_style (local.get $hwnd)) (i32.const 0xEFFFFFFF))))))
+@@ -6735,6 +6775,41 @@
+     (global.set $eax (i32.and (global.get $eax) (i32.const 0xFFFF)))
+     (call $win16_api_return (i32.const 6)))
+ 
++  ;; USER.59 SetActiveWindow(hWnd) -> the window that was active. Visual Basic's
++  ;; form procedure calls this while handling activation; the engine delivers
++  ;; WM_ACTIVATE from the transition so Form_Activate runs exactly once.
++  (func $win16_SetActiveWindow
++    (local $hwnd i32)
++    (local.set $hwnd (call $win16_h32 (call $win16_arg16 (i32.const 0))))
++    (global.set $eax (call $win16_h16
++      (call $active_window_transition (local.get $hwnd))))
++    (call $win16_api_return (i32.const 2)))
++
++  ;; USER.287 GetLastActivePopup(hWnd) — one handle in, one handle out.
++  (func $win16_GetLastActivePopup
++    (local $hwnd i32)
++    (local.set $hwnd (call $win16_h32 (call $win16_arg16 (i32.const 0))))
++    (call $win16_call32_begin (i32.const 1))
++    (call $handle_GetLastActivePopup (local.get $hwnd)
++      (i32.const 0) (i32.const 0) (i32.const 0) (i32.const 0) (i32.const 0))
++    (call $win16_call32_end)
++    (global.set $eax (call $win16_h16 (global.get $eax)))
++    (call $win16_api_return (i32.const 2)))
++
++  ;; USER.237 GetUpdateRgn(hWnd, hRgn, bErase) has only narrow handles, so
++  ;; pass it through to USER's update-region state and retain its BOOL result.
++  (func $win16_GetUpdateRgn
++    (local $hwnd i32) (local $hrgn i32) (local $erase i32)
++    (local.set $hwnd (call $win16_h32 (call $win16_arg16 (i32.const 2))))
++    (local.set $hrgn (call $win16_h32 (call $win16_arg16 (i32.const 1))))
++    (local.set $erase (call $win16_arg16 (i32.const 0)))
++    (call $win16_call32_begin (i32.const 3))
++    (call $handle_GetUpdateRgn (local.get $hwnd) (local.get $hrgn) (local.get $erase)
++      (i32.const 0) (i32.const 0) (i32.const 0))
++    (call $win16_call32_end)
++    (global.set $eax (i32.and (global.get $eax) (i32.const 0xFFFF)))
++    (call $win16_api_return (i32.const 6)))
++
+   ;; USER.16 ClipCursor(lpRect). The Win16 RECT has four signed 16-bit fields;
+   ;; widen it before handing it to the shared cursor-confinement handler.
+   ;; A null far pointer releases any existing confinement.

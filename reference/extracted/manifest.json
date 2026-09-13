@@ -1,0 +1,637 @@
+{
+  "source": "assets/original/RSTEIN.EXE",
+  "bitmap_count": 74,
+  "bitmaps": [
+    {
+      "file": "level1-cavern.png",
+      "exe_offset": "0xf2a3",
+      "width": 640,
+      "height": 480,
+      "bmp_size": 308280
+    },
+    {
+      "file": "helicopter.png",
+      "exe_offset": "0x5a798",
+      "width": 294,
+      "height": 66,
+      "bmp_size": 20616
+    },
+    {
+      "file": "bitmap_02_171x21.png",
+      "exe_offset": "0x5f83b",
+      "width": 171,
+      "height": 21,
+      "bmp_size": 4692
+    },
+    {
+      "file": "bitmap_03_282x85.png",
+      "exe_offset": "0x60aaa",
+      "width": 282,
+      "height": 85,
+      "bmp_size": 25220
+    },
+    {
+      "file": "bitmap_04_1670x107.png",
+      "exe_offset": "0x66d49",
+      "width": 1670,
+      "height": 107,
+      "bmp_size": 179984
+    },
+    {
+      "file": "bitmap_05_23x11.png",
+      "exe_offset": "0x92c74",
+      "width": 23,
+      "height": 11,
+      "bmp_size": 1344
+    },
+    {
+      "file": "bitmap_06_202x39.png",
+      "exe_offset": "0x931cf",
+      "width": 202,
+      "height": 39,
+      "bmp_size": 9036
+    },
+    {
+      "file": "bitmap_07_202x59.png",
+      "exe_offset": "0x95536",
+      "width": 202,
+      "height": 59,
+      "bmp_size": 13116
+    },
+    {
+      "file": "bitmap_08_16x9.png",
+      "exe_offset": "0x9888d",
+      "width": 16,
+      "height": 9,
+      "bmp_size": 1224
+    },
+    {
+      "file": "bitmap_09_44x25.png",
+      "exe_offset": "0x98d70",
+      "width": 44,
+      "height": 25,
+      "bmp_size": 2180
+    },
+    {
+      "file": "grave.png",
+      "exe_offset": "0x9960f",
+      "width": 72,
+      "height": 60,
+      "bmp_size": 5400
+    },
+    {
+      "file": "player-spritesheet.png",
+      "exe_offset": "0x9ab42",
+      "width": 488,
+      "height": 182,
+      "bmp_size": 89896
+    },
+    {
+      "file": "bitmap_12_570x164.png",
+      "exe_offset": "0xb0a85",
+      "width": 570,
+      "height": 164,
+      "bmp_size": 94888
+    },
+    {
+      "file": "bitmap_13_57x141.png",
+      "exe_offset": "0xc7d48",
+      "width": 57,
+      "height": 141,
+      "bmp_size": 9540
+    },
+    {
+      "file": "bitmap_14_367x141.png",
+      "exe_offset": "0xca2a7",
+      "width": 367,
+      "height": 141,
+      "bmp_size": 52968
+    },
+    {
+      "file": "bitmap_15_1508x107.png",
+      "exe_offset": "0xd71aa",
+      "width": 1508,
+      "height": 107,
+      "bmp_size": 162436
+    },
+    {
+      "file": "bitmap_16_1494x35.png",
+      "exe_offset": "0xfec49",
+      "width": 1494,
+      "height": 35,
+      "bmp_size": 53440
+    },
+    {
+      "file": "bitmap_17_294x66.png",
+      "exe_offset": "0x10bd24",
+      "width": 294,
+      "height": 66,
+      "bmp_size": 20616
+    },
+    {
+      "file": "band-face-a.png",
+      "exe_offset": "0x110dc7",
+      "width": 66,
+      "height": 88,
+      "bmp_size": 7064
+    },
+    {
+      "file": "band-face-b.png",
+      "exe_offset": "0x11297a",
+      "width": 58,
+      "height": 81,
+      "bmp_size": 5940
+    },
+    {
+      "file": "bitmap_20_590x65.png",
+      "exe_offset": "0x1140c9",
+      "width": 590,
+      "height": 65,
+      "bmp_size": 39560
+    },
+    {
+      "file": "bitmap_21_36x22.png",
+      "exe_offset": "0x11db6c",
+      "width": 36,
+      "height": 22,
+      "bmp_size": 1872
+    },
+    {
+      "file": "bitmap_22_63x64.png",
+      "exe_offset": "0x11e2d7",
+      "width": 63,
+      "height": 64,
+      "bmp_size": 5176
+    },
+    {
+      "file": "bitmap_23_16x9.png",
+      "exe_offset": "0x11f72a",
+      "width": 16,
+      "height": 9,
+      "bmp_size": 1224
+    },
+    {
+      "file": "bitmap_24_488x182.png",
+      "exe_offset": "0x11fc0d",
+      "width": 488,
+      "height": 182,
+      "bmp_size": 89896
+    },
+    {
+      "file": "bitmap_25_570x164.png",
+      "exe_offset": "0x135b50",
+      "width": 570,
+      "height": 164,
+      "bmp_size": 94888
+    },
+    {
+      "file": "level2-concert.png",
+      "exe_offset": "0x14d3c3",
+      "width": 640,
+      "height": 480,
+      "bmp_size": 308280
+    },
+    {
+      "file": "bitmap_27_99x133.png",
+      "exe_offset": "0x19887c",
+      "width": 99,
+      "height": 133,
+      "bmp_size": 14380
+    },
+    {
+      "file": "bitmap_28_171x21.png",
+      "exe_offset": "0x19c0c3",
+      "width": 171,
+      "height": 21,
+      "bmp_size": 4692
+    },
+    {
+      "file": "flamethrower-fire-a.png",
+      "exe_offset": "0x19d332",
+      "width": 135,
+      "height": 11,
+      "bmp_size": 2576
+    },
+    {
+      "file": "flamethrower-fire-b.png",
+      "exe_offset": "0x19dd5d",
+      "width": 135,
+      "height": 11,
+      "bmp_size": 2576
+    },
+    {
+      "file": "bitmap_31_348x30.png",
+      "exe_offset": "0x19e788",
+      "width": 348,
+      "height": 30,
+      "bmp_size": 11520
+    },
+    {
+      "file": "woman-doll.png",
+      "exe_offset": "0x1a14a3",
+      "width": 116,
+      "height": 121,
+      "bmp_size": 15116
+    },
+    {
+      "file": "sea-urchin.png",
+      "exe_offset": "0x1a4fca",
+      "width": 176,
+      "height": 165,
+      "bmp_size": 30120
+    },
+    {
+      "file": "bitmap_34_18x29.png",
+      "exe_offset": "0x1ac58d",
+      "width": 18,
+      "height": 29,
+      "bmp_size": 1660
+    },
+    {
+      "file": "bitmap_35_612x85.png",
+      "exe_offset": "0x1acc24",
+      "width": 612,
+      "height": 85,
+      "bmp_size": 53100
+    },
+    {
+      "file": "monster-a.png",
+      "exe_offset": "0x1b9bab",
+      "width": 73,
+      "height": 100,
+      "bmp_size": 8680
+    },
+    {
+      "file": "monster-b.png",
+      "exe_offset": "0x1bbdae",
+      "width": 89,
+      "height": 97,
+      "bmp_size": 10004
+    },
+    {
+      "file": "bitmap_38_16x9.png",
+      "exe_offset": "0x1be4dd",
+      "width": 16,
+      "height": 9,
+      "bmp_size": 1224
+    },
+    {
+      "file": "bitmap_39_590x65.png",
+      "exe_offset": "0x1be9c0",
+      "width": 590,
+      "height": 65,
+      "bmp_size": 39560
+    },
+    {
+      "file": "bitmap_40_16x9.png",
+      "exe_offset": "0x1c8463",
+      "width": 16,
+      "height": 9,
+      "bmp_size": 1224
+    },
+    {
+      "file": "bitmap_41_570x164.png",
+      "exe_offset": "0x1c8946",
+      "width": 570,
+      "height": 164,
+      "bmp_size": 94888
+    },
+    {
+      "file": "bitmap_42_488x182.png",
+      "exe_offset": "0x1dfc09",
+      "width": 488,
+      "height": 182,
+      "bmp_size": 89896
+    },
+    {
+      "file": "bitmap_43_1508x107.png",
+      "exe_offset": "0x1f5b4c",
+      "width": 1508,
+      "height": 107,
+      "bmp_size": 162436
+    },
+    {
+      "file": "bitmap_44_570x164.png",
+      "exe_offset": "0x21d5eb",
+      "width": 570,
+      "height": 164,
+      "bmp_size": 94888
+    },
+    {
+      "file": "bitmap_45_488x182.png",
+      "exe_offset": "0x2348ae",
+      "width": 488,
+      "height": 182,
+      "bmp_size": 89896
+    },
+    {
+      "file": "level3-beach.png",
+      "exe_offset": "0x24aaa5",
+      "width": 640,
+      "height": 480,
+      "bmp_size": 308280
+    },
+    {
+      "file": "bitmap_47_590x65.png",
+      "exe_offset": "0x295f7a",
+      "width": 590,
+      "height": 65,
+      "bmp_size": 39560
+    },
+    {
+      "file": "bitmap_48_16x9.png",
+      "exe_offset": "0x29fa1d",
+      "width": 16,
+      "height": 9,
+      "bmp_size": 1224
+    },
+    {
+      "file": "bitmap_49_16x9.png",
+      "exe_offset": "0x29ff00",
+      "width": 16,
+      "height": 9,
+      "bmp_size": 1224
+    },
+    {
+      "file": "bitmap_50_488x182.png",
+      "exe_offset": "0x2a03e3",
+      "width": 488,
+      "height": 182,
+      "bmp_size": 89896
+    },
+    {
+      "file": "bitmap_51_488x182.png",
+      "exe_offset": "0x2b6326",
+      "width": 488,
+      "height": 182,
+      "bmp_size": 89896
+    },
+    {
+      "file": "bitmap_52_570x164.png",
+      "exe_offset": "0x2cc269",
+      "width": 570,
+      "height": 164,
+      "bmp_size": 94888
+    },
+    {
+      "file": "bitmap_53_570x164.png",
+      "exe_offset": "0x2e352c",
+      "width": 570,
+      "height": 164,
+      "bmp_size": 94888
+    },
+    {
+      "file": "bitmap_54_171x21.png",
+      "exe_offset": "0x2fa7ef",
+      "width": 171,
+      "height": 21,
+      "bmp_size": 4692
+    },
+    {
+      "file": "bitmap_55_1650x107.png",
+      "exe_offset": "0x2fba5e",
+      "width": 1650,
+      "height": 107,
+      "bmp_size": 177844
+    },
+    {
+      "file": "bitmap_56_1508x107.png",
+      "exe_offset": "0x32712d",
+      "width": 1508,
+      "height": 107,
+      "bmp_size": 162436
+    },
+    {
+      "file": "bitmap_57_300x44.png",
+      "exe_offset": "0x34ebcc",
+      "width": 300,
+      "height": 44,
+      "bmp_size": 14280
+    },
+    {
+      "file": "bitmap_58_212x79.png",
+      "exe_offset": "0x3523af",
+      "width": 212,
+      "height": 79,
+      "bmp_size": 17828
+    },
+    {
+      "file": "bitmap_59_420x57.png",
+      "exe_offset": "0x35696e",
+      "width": 420,
+      "height": 57,
+      "bmp_size": 25020
+    },
+    {
+      "file": "bitmap_60_72x91.png",
+      "exe_offset": "0x35cb45",
+      "width": 72,
+      "height": 91,
+      "bmp_size": 7632
+    },
+    {
+      "file": "bitmap_61_75x89.png",
+      "exe_offset": "0x35e930",
+      "width": 75,
+      "height": 89,
+      "bmp_size": 7844
+    },
+    {
+      "file": "bitmap_62_16x9.png",
+      "exe_offset": "0x3607ef",
+      "width": 16,
+      "height": 9,
+      "bmp_size": 1224
+    },
+    {
+      "file": "bitmap_63_590x65.png",
+      "exe_offset": "0x360cd2",
+      "width": 590,
+      "height": 65,
+      "bmp_size": 39560
+    },
+    {
+      "file": "bitmap_64_16x9.png",
+      "exe_offset": "0x36a775",
+      "width": 16,
+      "height": 9,
+      "bmp_size": 1224
+    },
+    {
+      "file": "bitmap_65_570x164.png",
+      "exe_offset": "0x36ac58",
+      "width": 570,
+      "height": 164,
+      "bmp_size": 94888
+    },
+    {
+      "file": "bitmap_66_488x182.png",
+      "exe_offset": "0x381f1b",
+      "width": 488,
+      "height": 182,
+      "bmp_size": 89896
+    },
+    {
+      "file": "bitmap_67_1508x107.png",
+      "exe_offset": "0x397e5e",
+      "width": 1508,
+      "height": 107,
+      "bmp_size": 162436
+    },
+    {
+      "file": "bitmap_68_570x164.png",
+      "exe_offset": "0x3bf8fd",
+      "width": 570,
+      "height": 164,
+      "bmp_size": 94888
+    },
+    {
+      "file": "bitmap_69_488x182.png",
+      "exe_offset": "0x3d6bc0",
+      "width": 488,
+      "height": 182,
+      "bmp_size": 89896
+    },
+    {
+      "file": "title-screen.png",
+      "exe_offset": "0x3ecd9b",
+      "width": 640,
+      "height": 480,
+      "bmp_size": 308280
+    },
+    {
+      "file": "game-over.png",
+      "exe_offset": "0x438499",
+      "width": 640,
+      "height": 480,
+      "bmp_size": 308280
+    },
+    {
+      "file": "highscore-outro.png",
+      "exe_offset": "0x483a95",
+      "width": 640,
+      "height": 480,
+      "bmp_size": 308280
+    },
+    {
+      "file": "button-knob.png",
+      "exe_offset": "0x4ceef0",
+      "width": 41,
+      "height": 41,
+      "bmp_size": 2884
+    }
+  ],
+  "forms": {
+    "frmScreen1": [
+      "frmScreen1",
+      "picScreen",
+      "imgManStepR",
+      "imgManJumpR",
+      "timerMain",
+      "imgFireR",
+      "lblPunkte",
+      "imgEiszapfen",
+      "imgFackel",
+      "imgExplosionKlein",
+      "imgKopf1",
+      "imgKopf2",
+      "imgHeli",
+      "imgScholle",
+      "imgBlack",
+      "imgExplosionGross",
+      "timerHeliFire",
+      "imgFade",
+      "imgManStepL",
+      "imgManJumpL",
+      "imgGrab",
+      "imgUrne",
+      "imgFireL",
+      "imgEisfalle",
+      "imgEisfalleMsk",
+      "imgEiszapfenMsk",
+      "imgMonster",
+      "imgSterben",
+      "timerSterben",
+      "lblMunition",
+      "imgLeben",
+      "imgHeli1"
+    ],
+    "frmScreen2": [
+      "frmScreen2",
+      "picScreen",
+      "imgManJumpL",
+      "timerMain",
+      "imgManStepL",
+      "imgExplosionGross",
+      "imgManJumpR",
+      "imgManStepR",
+      "imgFireL",
+      "imgExplosionKlein",
+      "imgFireR",
+      "imgPuppe2",
+      "imgKopf4",
+      "imgKopf3",
+      "imgSchabe",
+      "imgTauch",
+      "imgWaffe",
+      "imgPuppe1",
+      "imgBoot",
+      "timerWaffeFire",
+      "imgPfeilR",
+      "imgPfeilL",
+      "lblMunition",
+      "imgLeben",
+      "lblPunkte"
+    ],
+    "frmScreen3": [
+      "frmScreen3",
+      "picScreen",
+      "imgManJumpL",
+      "timerMain",
+      "imgManStepL",
+      "imgExplosionGross",
+      "imgManJumpR",
+      "imgManStepR",
+      "imgFireL",
+      "imgExplosionKlein",
+      "imgFireR",
+      "imgKopf6",
+      "imgKopf5",
+      "imgIgel",
+      "imgEgo",
+      "imgFass",
+      "imgImplosion",
+      "timerMovingFire",
+      "imgMonster",
+      "lblMunition",
+      "imgLeben",
+      "imgManStepLO",
+      "imgManStepRO",
+      "imgManJumpLO",
+      "imgManJumpRO",
+      "lblPunkte",
+      "imgFireRB",
+      "imgFireLB",
+      "imgImplosionKlein"
+    ],
+    "frmStart": [
+      "frmStart",
+      "picBack"
+    ],
+    "frmGameOver": [
+      "frmGameOver",
+      "picBack"
+    ],
+    "frmOutro": [
+      "frmOutro",
+      "picBack",
+      "btnSave",
+      "lblOut",
+      "imgKnopf"
+    ],
+    "frmLoading": [
+      "frmLoading",
+      "lblText"
+    ]
+  }
+}

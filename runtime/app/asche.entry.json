@@ -1,0 +1,22 @@
+{
+  "note": "Registry entry for the original Rammstein 'Asche zu Asche' Windows 3.x game, in the shape wine-assembly's lib/apps.js APPS table uses. URLs are absolute so the engine can be embedded at any path on the site as long as the repo's assets/original tree is served at /assets/original/.",
+  "exe": "/assets/original/RSTEIN.EXE",
+  "win16Modules": ["RAMM16"],
+  "files": [
+    { "url": "/assets/original/WAV/BOOOM1.WAV", "vfsPaths": ["c:\\wav\\booom1.wav", "c:\\booom1.wav"] },
+    { "url": "/assets/original/WAV/CHORAL.WAV", "vfsPaths": ["c:\\wav\\choral.wav", "c:\\choral.wav"] },
+    { "url": "/assets/original/WAV/ENTER.WAV", "vfsPaths": ["c:\\wav\\enter.wav", "c:\\enter.wav"] },
+    { "url": "/assets/original/WAV/FIRE.WAV", "vfsPaths": ["c:\\wav\\fire.wav", "c:\\fire.wav"] },
+    { "url": "/assets/original/WAV/GUMMI.WAV", "vfsPaths": ["c:\\wav\\gummi.wav", "c:\\gummi.wav"] },
+    { "url": "/assets/original/WAV/HELI3.WAV", "vfsPaths": ["c:\\wav\\heli3.wav", "c:\\heli3.wav"] },
+    { "url": "/assets/original/WAV/LEBEN.WAV", "vfsPaths": ["c:\\wav\\leben.wav", "c:\\leben.wav"] },
+    { "url": "/assets/original/WAV/MONSTER.WAV", "vfsPaths": ["c:\\wav\\monster.wav", "c:\\monster.wav"] },
+    { "url": "/assets/original/WAV/P10000.WAV", "vfsPaths": ["c:\\wav\\p10000.wav", "c:\\p10000.wav"] },
+    { "url": "/assets/original/WAV/P2000.WAV", "vfsPaths": ["c:\\wav\\p2000.wav", "c:\\p2000.wav"] },
+    { "url": "/assets/original/WAV/P5000.WAV", "vfsPaths": ["c:\\wav\\p5000.wav", "c:\\p5000.wav"] },
+    { "url": "/assets/original/WAV/SCHABE.WAV", "vfsPaths": ["c:\\wav\\schabe.wav", "c:\\schabe.wav"] },
+    { "url": "/assets/original/WAV/TOD1.WAV", "vfsPaths": ["c:\\wav\\tod1.wav", "c:\\tod1.wav"] },
+    { "url": "/assets/original/WAV/TOD2.WAV", "vfsPaths": ["c:\\wav\\tod2.wav", "c:\\tod2.wav"] },
+    { "url": "/assets/original/WAV/WAFFE.WAV", "vfsPaths": ["c:\\wav\\waffe.wav", "c:\\waffe.wav"] }
+  ]
+}
