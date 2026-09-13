@@ -41,6 +41,7 @@
     #embed-splash strong { font-size: clamp(1.5rem, 5vw, 2.6rem); line-height: 1.1; }
     #embed-splash p { margin: 0; color: #afafa7; font-size: .85rem; }
   </style>
+  <link rel="stylesheet" href="/touch-controls.css">
   <script>if (new URLSearchParams(location.search).get('embed') === '1') document.documentElement.classList.add('embed');</script>
 </head>
 <body>
@@ -50,12 +51,13 @@
       <h1>Asche zu Asche</h1>
       <p class="intro">The original Windows game from the <em>Das Modell</em> single.</p>
     </header>
-    <div id="game"><div id="embed-splash" class="embed-only"><strong>Asche zu Asche</strong><p>The original 1997 Rammstein game</p><p>Click to load · approximately 40 MB<br>← → Move · ↑ Jump · Space Fire</p></div></div>
+    <div id="game"><div id="game-screen"><div id="embed-splash" class="embed-only"><strong>Asche zu Asche</strong><p>The original 1997 Rammstein game</p><p>Click to load · approximately 40 MB<br>← → Move · ↑ Jump · Space Fire</p></div></div></div>
     <audio id="music" src="/audio/asche-zu-asche.mp3" preload="none" loop></audio>
     <div class="toolbar">
       <button id="play" type="button">Load game</button>
       <button id="fullscreen" type="button">Fullscreen</button>
       <button id="restart" type="button">Restart game</button>
+      <button id="touch-toggle" type="button" aria-pressed="false">Touch controls</button>
       <button id="music-toggle" type="button" aria-controls="music">Disable music</button>
       <button id="crash-report" type="button" hidden>Download crash report</button>
       <label for="volume">Volume</label>
@@ -72,7 +74,7 @@
         <li><kbd>Space</kbd> Fire</li>
         <li><kbd>Esc</kbd> Quit game</li>
       </ul>
-      <p>Load the game, wait for the title screen, then click it to start. Hold the keys to move and fire. A desktop keyboard is recommended.</p>
+      <p>Load the game, wait for the title screen, then tap it to start. Hold the keys or on-screen buttons to move and fire. Touch controls appear automatically on touch devices; you can also toggle them above. Hold movement and jump or fire together.</p>
       <p>Use the volume slider to adjust all sound; set it to 0 to mute. The background song plays quietly beneath the effects. Disable music turns off just the song.</p>
       <p>Explore three levels, shoot the floating band-member faces to open the way forward, and survive to the end. Finish quickly and conserve ammunition: every second costs 10 points, while each unused shot earns 1,000 bonus points.</p>
     </section>
@@ -83,6 +85,7 @@
       <p>Also play <a href="https://benzin.rammwiki.mrzetti.com/">Benzin</a>.</p>
     </footer>
   </main>
+  <script src="/touch-controls.js"></script>
   <script src="/app.js"></script>
 </body>
 </html>

@@ -3,7 +3,9 @@
 Use `https://YOUR-ASCHE-HOST/?embed=1` for the compact player. It includes a
 click-to-load title panel, volume, music toggle, fullscreen, restart and a link
 to the full page. Nothing downloads from the emulator until Load game is clicked.
-The player fits the iframe height; a desktop keyboard is recommended.
+The player fits the iframe height. Touch devices automatically get movement,
+jump and fire buttons; the toolbar's Touch controls toggle works on any device.
+The buttons remain within the fullscreen game and accept simultaneous fingers.
 
 ```html
 <iframe src="https://asche.rammwiki.net/?embed=1"

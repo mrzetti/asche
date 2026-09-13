@@ -1,6 +1,20 @@
 const game = document.getElementById('game');
 const status = document.getElementById('status');
 const play = document.getElementById('play');
+const controls = createTouchControls({
+  host: game, toggle: document.getElementById('touch-toggle'), minimumHold: 160,
+  keys: [['ArrowLeft', '← Left'], ['ArrowRight', 'Right →'], ['ArrowUp', '↑ Jump'], ['Space', 'Fire']],
+  send(code, down) {
+    const win = game.querySelector('iframe')?.contentWindow;
+    const canvas = win?.document.getElementById('canvas');
+    if (!canvas) return;
+    const keyCode = {ArrowLeft:37, ArrowUp:38, ArrowRight:39, Space:32}[code];
+    canvas.dispatchEvent(new win.KeyboardEvent(down ? 'keydown' : 'keyup', {
+      key: code === 'Space' ? ' ' : code, code, keyCode, which:keyCode,
+      bubbles:true, cancelable:true,
+    }));
+  },
+});
 if (document.documentElement.classList.contains('embed')) {
   document.getElementById('embed-splash').append(play);
 }
@@ -67,6 +81,7 @@ volume.addEventListener('input', applyVolume);
 applyVolume();
 
 function startGame() {
+  controls.releaseAll();
   if (!window.crossOriginIsolated) {
     status.textContent = 'This game needs HTTPS and cross-origin isolation. The containing wiki page must enable COOP/COEP and permit cross-origin isolation for the iframe. Use Open full game to play separately.';
     return;
@@ -78,14 +93,9 @@ function startGame() {
   updateMusicButton();
   const frame = document.createElement('iframe');
   frame.title = 'Asche zu Asche — original Windows game';
-  frame.allow = 'autoplay; fullscreen; gamepad';
-  frame.allowFullscreen = true;
-  if (document.documentElement.classList.contains('embed')) {
-    // The wrapper owns fullscreen; SDL's own fullscreen request would cover
-    // the embed toolbar with the inner emulator iframe.
-    frame.allowFullscreen = false;
-    frame.allow = "autoplay; gamepad; fullscreen 'none'";
-  }
+  // The wrapper owns fullscreen so the touch controls remain available.
+  // SDL fullscreen on the inner iframe would cover them.
+  frame.allow = "autoplay; gamepad; fullscreen 'none'";
   frame.src = '/emulator/boxedwine.html?root=boxedwine&app=asche&p=RSTEIN.EXE&auto=true&sound=true&resolution=640x480';
   status.textContent = 'Loading the emulator…';
   frame.addEventListener('load', () => {
@@ -110,7 +120,7 @@ function startGame() {
     }, { once: true });
     status.textContent = 'Wait for the title screen, then click it to start. Hold the arrow keys to move.';
   });
-  game.replaceChildren(frame);
+  document.getElementById('game-screen').replaceChildren(frame);
   play.hidden = true;
 }
 

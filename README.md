@@ -8,6 +8,19 @@ assets and the background song are included; this is a static nginx deployment.
 **Compact wiki player:** add `?embed=1` to the site URL. See [EMBED.md](EMBED.md)
 for the click-to-load embed and its browser-isolation requirements.
 
+**Touch controls:** mobile/touch devices automatically show Left, Right, Jump
+and Fire buttons below the playfield, including in embeds and fullscreen.
+The toolbar toggle can enable them on any device. Multiple fingers can hold
+actions together; short taps last at least 160 ms for the original game's
+keyboard polling. Cancelling a touch, hiding the page or restarting releases
+held buttons. Runtime/HTTPS/isolation requirements still apply on phones.
+
+`tools/verify-touch.cjs` checks native multi-touch input in Chromium mobile
+emulation. Set `PLAYWRIGHT_MODULE` and `BROWSER_PATH` if using existing installs.
+It routes the local web files over the test site's runtime; set `GAME_URL` to
+your deployment (without a trailing slash). Physical iOS/Android device testing
+is still useful for memory/performance and browser-specific fullscreen support.
+
 The original 1997 Rammstein game runs through Boxedwine and its stripped Wine 6.0 filesystem in the
 browser. The original executable, VB3 runtime, custom DLL and audio files are
 preserved in `assets/original/`; provenance is in `assets/SOURCES.md`.

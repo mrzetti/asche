@@ -1,0 +1,7 @@
+#game { display: flex; flex-direction: column; }
+#game-screen { flex: 1; min-height: 0; width: 100%; overflow: hidden; }
+.touch-controls { flex: none; display: flex; gap: 8px; justify-content: space-between; padding: 8px max(8px, env(safe-area-inset-right)) 8px max(8px, env(safe-area-inset-left)); background: #191b18; touch-action: none; user-select: none; -webkit-user-select: none; }
+.touch-controls[hidden] { display: none; }
+.touch-controls button { flex: 1; min-width: 0; min-height: 52px; padding: 8px 4px; font: bold 14px system-ui, sans-serif; touch-action: none; -webkit-touch-callout: none; }
+.touch-controls button.held { background: #786336; border-color: #eed294; color: white; }
+#touch-toggle[aria-pressed="true"] { border-color: #c9c482; }
