@@ -1,6 +1,9 @@
 const game = document.getElementById('game');
 const status = document.getElementById('status');
 const play = document.getElementById('play');
+if (document.documentElement.classList.contains('embed')) {
+  document.getElementById('embed-splash').append(play);
+}
 const volume = document.getElementById('volume');
 const music = document.getElementById('music');
 const musicButton = document.getElementById('music-toggle');
@@ -64,6 +67,10 @@ volume.addEventListener('input', applyVolume);
 applyVolume();
 
 function startGame() {
+  if (!window.crossOriginIsolated) {
+    status.textContent = 'This game needs HTTPS and cross-origin isolation. The containing wiki page must enable COOP/COEP and permit cross-origin isolation for the iframe. Use Open full game to play separately.';
+    return;
+  }
   clearTimeout(musicTimer);
   musicReady = false;
   music.pause();
@@ -73,6 +80,12 @@ function startGame() {
   frame.title = 'Asche zu Asche — original Windows game';
   frame.allow = 'autoplay; fullscreen; gamepad';
   frame.allowFullscreen = true;
+  if (document.documentElement.classList.contains('embed')) {
+    // The wrapper owns fullscreen; SDL's own fullscreen request would cover
+    // the embed toolbar with the inner emulator iframe.
+    frame.allowFullscreen = false;
+    frame.allow = "autoplay; gamepad; fullscreen 'none'";
+  }
   frame.src = '/emulator/boxedwine.html?root=boxedwine&app=asche&p=RSTEIN.EXE&auto=true&sound=true&resolution=640x480';
   status.textContent = 'Loading the emulator…';
   frame.addEventListener('load', () => {

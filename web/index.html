@@ -27,7 +27,21 @@
     .controls { display: flex; flex-wrap: wrap; gap: 12px 30px; padding: 0; list-style: none; }
     kbd { font: inherit; padding: 2px 7px; border: 1px solid #676858; border-bottom-width: 3px; border-radius: 4px; background: #23251e; }
     footer { margin-top: 32px; color: #93968b; font-size: .85rem; }
+    .embed-only { display: none; }
+    html.embed main { max-width: none; margin: 0; padding: 0; height: 100vh; height: 100dvh; display: flex; flex-direction: column; }
+    html.embed header, html.embed section, html.embed footer { display: none; }
+    html.embed #game { flex: 1; min-height: 0; aspect-ratio: auto; border: 0; }
+    html.embed .toolbar { flex: none; margin: 0; padding: 10px; gap: 8px; font-size: .85rem; }
+    html.embed .toolbar button { padding: 6px 10px; }
+    html.embed #volume { width: 85px; min-width: 0; }
+    html.embed #status { flex-basis: 100%; font-size: .8rem; }
+    html.embed #status:empty { display: none; }
+    html.embed .embed-only { display: inline; }
+    html.embed #embed-splash { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 20px; text-align: center; background: radial-gradient(ellipse at center, #32362a, #0b0c0b 80%); }
+    #embed-splash strong { font-size: clamp(1.5rem, 5vw, 2.6rem); line-height: 1.1; }
+    #embed-splash p { margin: 0; color: #afafa7; font-size: .85rem; }
   </style>
+  <script>if (new URLSearchParams(location.search).get('embed') === '1') document.documentElement.classList.add('embed');</script>
 </head>
 <body>
   <main>
@@ -36,7 +50,7 @@
       <h1>Asche zu Asche</h1>
       <p class="intro">The original Windows game from the <em>Das Modell</em> single.</p>
     </header>
-    <div id="game"></div>
+    <div id="game"><div id="embed-splash" class="embed-only"><strong>Asche zu Asche</strong><p>The original 1997 Rammstein game</p><p>Click to load · approximately 40 MB<br>← → Move · ↑ Jump · Space Fire</p></div></div>
     <audio id="music" src="/audio/asche-zu-asche.mp3" preload="none" loop></audio>
     <div class="toolbar">
       <button id="play" type="button">Load game</button>
@@ -47,6 +61,7 @@
       <label for="volume">Volume</label>
       <input id="volume" type="range" min="0" max="100" value="70">
       <output id="volume-value" for="volume">70%</output>
+      <a class="embed-only" href="/" target="_blank" rel="noopener">Open full game</a>
       <span id="status" role="status"></span>
     </div>
     <section aria-labelledby="controls-title">

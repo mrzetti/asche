@@ -62,7 +62,8 @@ URLs and local Playwright paths; adapt those before running elsewhere.
 Standalone hosting works with this configuration. An iframe inside MediaWiki
 also requires cross-origin isolation of the top-level wiki page and compatible
 iframe permission/resource policies; this template alone does not configure
-MediaWiki. Asche currently has the full-page wrapper, not a compact embed mode.
+MediaWiki. Use `/?embed=1` for the compact player; see [EMBED.md](EMBED.md) for
+iframe markup and the additional cross-origin policy configuration.
 
 ## Preservation and licenses
 

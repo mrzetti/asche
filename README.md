@@ -5,6 +5,9 @@ Site: https://asche.rammwiki.mrzetti.com
 **Hosting on another VPS:** follow [HOSTING.md](HOSTING.md). All public runtime
 assets and the background song are included; this is a static nginx deployment.
 
+**Compact wiki player:** add `?embed=1` to the site URL. See [EMBED.md](EMBED.md)
+for the click-to-load embed and its browser-isolation requirements.
+
 The original 1997 Rammstein game runs through Boxedwine and its stripped Wine 6.0 filesystem in the
 browser. The original executable, VB3 runtime, custom DLL and audio files are
 preserved in `assets/original/`; provenance is in `assets/SOURCES.md`.
