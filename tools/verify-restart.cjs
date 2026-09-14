@@ -38,6 +38,7 @@ const path=require('node:path');
 
   await frame.locator('#canvas').click({position:{x:320,y:260}});
   await page.waitForTimeout(2500);
+  assert.equal(await page.locator('#game-over').count(),0,'in-game screen misdetected as game over');
   await page.keyboard.down('ArrowLeft');
   await page.waitForTimeout(4000);
   await page.keyboard.up('ArrowLeft');

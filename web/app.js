@@ -69,38 +69,43 @@ function clearGameOverUi() {
   document.getElementById('game-over')?.remove();
 }
 
+// The original game-over form is the fixed 640x480 "game over" bitmap extracted
+// from RSTEIN.EXE (reference/extracted/game-over.png), downscaled to 32x24
+// luminance. Comparing the sampled canvas against that exact screen avoids
+// false positives on black loading/fade screens that also carry red text.
+const GAME_OVER_REFERENCE = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABEhYWFBQSCRQWFhUSAgAAAAAAAAAAAAAAAAAAAAAAAAoqMSopKS4jLisrMSQOAAAAAAAAAAAAAAAAAAAAAAAACiQcEhMTEwkQEBEUEwcAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
+const GAME_OVER_MAX_DISTANCE = 7;
+
+const GAME_OVER_LUMINANCE = (() => {
+  const raw = atob(GAME_OVER_REFERENCE);
+  const values = new Float32Array(raw.length);
+  for (let i = 0; i < raw.length; i += 1) values[i] = raw.charCodeAt(i);
+  return values;
+})();
+
 function sampleGameCanvas(frame) {
   const canvas = frame.contentDocument?.getElementById('canvas');
   if (!canvas?.width || !canvas?.height) return null;
   const sample = document.createElement('canvas');
-  sample.width = 64;
-  sample.height = 48;
+  sample.width = 32;
+  sample.height = 24;
   const context = sample.getContext('2d', {willReadFrequently: true});
-  context.drawImage(canvas, 0, 0, 64, 48);
-  return context.getImageData(0, 0, 64, 48).data;
+  context.drawImage(canvas, 0, 0, 32, 24);
+  const pixels = context.getImageData(0, 0, 32, 24).data;
+  const luminance = new Float32Array(32 * 24);
+  for (let i = 0, p = 0; p < luminance.length; i += 4, p += 1) {
+    luminance[p] = pixels[i] * 0.299 + pixels[i + 1] * 0.587 + pixels[i + 2] * 0.114;
+  }
+  return luminance;
 }
 
-// The game-over form is a black screen with red "game over" lettering in the
-// middle. The title screen and level HUDs always keep bright artwork outside
-// that band (logo, sky, HUD), so they cannot match.
-function looksLikeGameOver(pixels) {
-  let dark = 0;
-  let red = 0;
-  let brightOutside = 0;
+function looksLikeGameOver(luminance) {
+  if (!luminance || luminance.length !== GAME_OVER_LUMINANCE.length) return false;
   let total = 0;
-  for (let y = 0; y < 48; y++) {
-    for (let x = 0; x < 64; x++) {
-      const index = (y * 64 + x) * 4;
-      const r = pixels[index];
-      const g = pixels[index + 1];
-      const b = pixels[index + 2];
-      total += 1;
-      if (r + g + b < 60) dark += 1;
-      else if (y < 15 || y > 33) brightOutside += 1;
-      if (y >= 15 && y <= 33 && r > 80 && r > g * 1.6 && r > b * 1.6) red += 1;
-    }
+  for (let i = 0; i < luminance.length; i += 1) {
+    total += Math.abs(luminance[i] - GAME_OVER_LUMINANCE[i]);
   }
-  return dark / total > 0.9 && red >= 4 && brightOutside <= 3;
+  return total / luminance.length <= GAME_OVER_MAX_DISTANCE;
 }
 
 function watchForGameOver(frame) {
@@ -118,7 +123,7 @@ function watchForGameOver(frame) {
   }, GAME_OVER_POLL_MS);
 }
 
-function showGameOver() {
+function showGameOver(frame) {
   if (document.getElementById('game-over')) return;
   if (gameOverWatch) {
     clearInterval(gameOverWatch);
@@ -140,7 +145,19 @@ function showGameOver() {
     remaining -= 1;
     const counter = document.getElementById('game-over-count');
     if (counter) counter.textContent = String(Math.max(0, remaining));
-    if (remaining <= 0) startGame();
+    if (remaining > 0) return;
+    // Never reload if the screen changed: this makes a detection mistake
+    // self-healing instead of interrupting a running game.
+    const current = sampleGameCanvas(frame);
+    if (current && !looksLikeGameOver(current)) {
+      clearInterval(gameOverTimer);
+      gameOverTimer = undefined;
+      overlay.remove();
+      status.textContent = 'The game continued; the automatic restart was cancelled.';
+      watchForGameOver(frame);
+      return;
+    }
+    startGame();
   }, 1000);
   document.getElementById('game-over-now').addEventListener('click', startGame);
   document.getElementById('game-over-stay').addEventListener('click', () => {
