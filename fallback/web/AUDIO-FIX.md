@@ -38,6 +38,24 @@ recorded playthrough used an external soundtrack.
 Reproduce with `tools/audio-probe.cjs`, setting `PROBE_URL` to the emulator URL
 with `sound=true&args=-env;WINEDEBUG%3D%2Bwinmm` appended to enable Wine tracing.
 
+## Startup diagnostics update (2026-09-14)
+
+A separate Android Firefox report at 312 ms had a first stack frame in
+`moz-extension://…/URL-Shortener-Unshortener.user.js`. This was an extension
+exception, not evidence of the late-stage WASM crash. The shell's global
+`onerror` used to permanently replace Module.setStatus on any uncaught error.
+It now leaves status updates intact for recognizable extension-origin errors.
+Diagnostics retains up to ten such errors separately; they do not occupy the
+first game-failure slot. Classification examines the first stack frame or a
+direct extension file URL, not arbitrary later extension wrappers.
+
+The wrapper now shows a loading panel until artwork is detected on the canvas.
+Archive downloads use XMLHttpRequest's native progress events with an
+ArrayBuffer response, and report network/HTTP failures. The status throttle's
+timestamp comparison was corrected too. `web/loading.js` samples a 32×24 canvas
+copy twice a second during startup only; Show game is available after 45 seconds
+if canvas readback cannot detect readiness. No fake overall percentage is used.
+
 ## Unresolved gameplay crash (2026-09-13)
 
 The user reported a crash near the end of stage one while shooting a helicopter,

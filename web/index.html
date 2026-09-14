@@ -27,6 +27,15 @@
     .controls { display: flex; flex-wrap: wrap; gap: 12px 30px; padding: 0; list-style: none; }
     kbd { font: inherit; padding: 2px 7px; border: 1px solid #676858; border-bottom-width: 3px; border-radius: 4px; background: #23251e; }
     footer { margin-top: 32px; color: #93968b; font-size: .85rem; }
+    #game-screen { position: relative; }
+    .game-loading { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 16px; background: #11150f; text-align: center; overflow: auto; }
+    .game-loading strong { font-size: clamp(1rem, 4vw, 1.5rem); }
+    .game-loading p { margin: 0; font-size: .85rem; line-height: 1.4; color: #c8cbbd; }
+    .game-loading progress { width: min(280px, 90%); accent-color: #b9b778; }
+    .loading-spinner { width: 30px; height: 30px; flex-shrink: 0; border: 3px solid #454c3a; border-top-color: #d3cf91; border-radius: 50%; animation: loading-spin 1s linear infinite; }
+    .loading-spinner[hidden] { display: none; }
+    @keyframes loading-spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) { .loading-spinner { animation: none; } }
     .embed-only { display: none; }
     html.embed main { max-width: none; margin: 0; padding: 0; height: 100vh; height: 100dvh; display: flex; flex-direction: column; }
     html.embed header, html.embed section, html.embed footer { display: none; }
@@ -86,6 +95,7 @@
     </footer>
   </main>
   <script src="/touch-controls.js"></script>
+  <script src="/loading.js"></script>
   <script src="/app.js"></script>
 </body>
 </html>

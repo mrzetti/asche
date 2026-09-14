@@ -7,7 +7,7 @@ const path=require('node:path');
   try {
     const page=await browser.newPage();
     if (!process.env.LIVE) {
-      for (const [url,file] of [['/','web/index.html'],['/app.js','web/app.js'],['/emulator/boxedwine.html','fallback/web/boxedwine.html'],['/emulator/diagnostics.js','fallback/web/diagnostics.js']]) {
+      for (const [url,file] of [['/','web/index.html'],['/app.js','web/app.js'],['/loading.js','web/loading.js'],['/emulator/boxedwine.html','fallback/web/boxedwine.html'],['/emulator/diagnostics.js','fallback/web/diagnostics.js'],['/emulator/boxedwine-shell.js','fallback/web/boxedwine-shell.js']]) {
         await page.route(u=>u.pathname===url,route=>route.fulfill({path:path.resolve(file),contentType:file.endsWith('.js')?'application/javascript':'text/html',headers:{'Cross-Origin-Opener-Policy':'same-origin','Cross-Origin-Embedder-Policy':'require-corp','Cross-Origin-Resource-Policy':'same-origin'}}));
       }
     }

@@ -23,13 +23,19 @@ const music = document.getElementById('music');
 const musicButton = document.getElementById('music-toggle');
 const crashButton = document.getElementById('crash-report');
 let crashReport;
+let loadingUI;
 window.addEventListener('message', event => {
   const frame = game.querySelector('iframe');
-  if (event.origin !== location.origin || event.source !== frame?.contentWindow
-      || event.data?.type !== 'asche-runtime-failure') return;
+  if (event.origin !== location.origin || event.source !== frame?.contentWindow) return;
+  if (event.data?.type === 'asche-loading') {
+    loadingUI?.update(event.data);
+    return;
+  }
+  if (event.data?.type !== 'asche-runtime-failure') return;
   crashReport = frame.contentWindow.getAscheCrashReport();
   crashButton.hidden = false;
-  status.textContent = 'The emulator reported an error. Download the crash report before restarting.';
+  status.textContent = 'An error was reported. If the game does not start or stops responding, download the crash report.';
+  loadingUI?.update({stage:'error', message:status.textContent});
 });
 crashButton.addEventListener('click', () => {
   const url = URL.createObjectURL(new Blob([JSON.stringify(crashReport, null, 2)], {type: 'application/json'}));
@@ -87,6 +93,7 @@ function startGame() {
     return;
   }
   clearTimeout(musicTimer);
+  loadingUI?.dispose();
   musicReady = false;
   music.pause();
   music.currentTime = 0;
@@ -118,9 +125,12 @@ function startGame() {
         void playMusic();
       }, 2500);
     }, { once: true });
-    status.textContent = 'Wait for the title screen, then click it to start. Hold the arrow keys to move.';
+    if (frame.contentWindow.ascheLoadingState) loadingUI?.update(frame.contentWindow.ascheLoadingState);
   });
   document.getElementById('game-screen').replaceChildren(frame);
+  loadingUI = createAscheLoading(document.getElementById('game-screen'), frame, () => {
+    status.textContent = 'Tap the title screen to start. Use the arrow keys or touch controls to play.';
+  });
   play.hidden = true;
 }
 

@@ -346,16 +346,29 @@
     		return contents;
         }
         function loadFile(pathPrefix, filename, callback) {
-			fetch(pathPrefix + filename, { method: 'GET' }).then(function(response) {
-      			if (response.status === 200) {
-					response.arrayBuffer().then(function(buffer) {
-						let arr = new Uint8Array(buffer);
-						callback(arr);
-    				});
-      			} else {
-      				console.log('Unable to load:' + filename + ' error:' + response.status);
-      			}
-			});
+            const request = new XMLHttpRequest();
+            request.open('GET', pathPrefix + filename);
+            request.responseType = 'arraybuffer';
+            const progress = (loaded, total) => window.reportAscheLoading?.({
+                stage:'download', file:filename, loaded, total
+            });
+            progress(0, 0);
+            request.onprogress = event => progress(event.loaded, event.lengthComputable ? event.total : 0);
+            const fail = message => {
+                window.reportAscheLoading?.({stage:'error', message});
+                // Preserve network failures in the ordinary crash report too.
+                window.dispatchEvent(new ErrorEvent('error', {message, error:new Error(message)}));
+            };
+            request.onerror = () => fail('Could not download ' + filename + '. Check your connection and restart.');
+            request.onload = () => {
+                if (request.status !== 200) {
+                    fail('Could not download ' + filename + ' (HTTP ' + request.status + ').');
+                    return;
+                }
+                window.reportAscheLoading?.({stage:'boot'});
+                callback(new Uint8Array(request.response));
+            };
+            request.send();
 		}
         function buildAppFileSystem(callback) {
             if(Config.appPayload.length > 0){
@@ -712,10 +725,11 @@
         })(),
         setStatus: function(text) {
           if (!Module.setStatus.last) Module.setStatus.last = { time: Date.now(), text: '' };
-          if (text === Module.setStatus.text) return;
+          if (text === Module.setStatus.last.text) return;
           var m = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
           var now = Date.now();
-          if (m && now - Date.now() < 30) return; // if this is a progress update, skip it if too soon
+          if (m && now - Module.setStatus.last.time < 30) return;
+          Module.setStatus.last = {time:now, text};
           if (m) {
             text = m[1];
             progressElement.value = parseInt(m[2])*100;
@@ -737,7 +751,8 @@
         }
       };
       Module.setStatus('Downloading...');
-      window.onerror = function() {
+      window.onerror = function(message, file, line, column, error) {
+        if (window.isAscheExtensionError?.(error, file)) return;
         Module.setStatus('Exception thrown, see JavaScript console');
         spinnerElement.style.display = 'none';
         Module.setStatus = function(text) {

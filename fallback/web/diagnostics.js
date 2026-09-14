@@ -4,6 +4,18 @@
   const logs = [];
   const inputs = [];
   let firstFailure;
+  const externalErrors = [];
+  // Attribute by the origin of the first stack frame, not later injected
+  // wrappers that may appear beneath a genuine emulator failure.
+  window.isAscheExtensionError = (error, file = '') => {
+    const firstFrame = String(error?.stack || '').split('\n').find(line => /(?:@|\bat\b).*?:\/\//.test(line)) || '';
+    return /^(?:moz|chrome|safari-web)-extension:\/\//.test(file)
+      || /(?:moz|chrome|safari-web)-extension:\/\//.test(firstFrame);
+  };
+  window.reportAscheLoading = detail => {
+    window.ascheLoadingState = detail;
+    if (parent !== window) parent.postMessage({type:'asche-loading', ...detail}, location.origin);
+  };
   const text = value => String(value?.stack || value).slice(0, 2000);
   const remember = (list, entry, limit) => {
     list.push(entry);
@@ -24,9 +36,14 @@
       elapsedMs: Date.now() - started, browser: navigator.userAgent,
       isolated: crossOriginIsolated, runtime, error,
       logs: logs.slice(), inputs: inputs.slice(),
+      externalErrors: externalErrors.slice(),
     };
   }
   function capture(error) {
+    if (window.isAscheExtensionError({stack:error.stack || error.message}, error.file)) {
+      remember(externalErrors, {ms:Date.now() - started, ...error}, 10);
+      return;
+    }
     if (firstFailure) return;
     firstFailure = snapshot(error);
     if (parent !== window) parent.postMessage({type: 'asche-runtime-failure'}, location.origin);
@@ -48,7 +65,7 @@
     stack: text(event.error || ''), file: event.filename,
     line: event.lineno, column: event.colno,
   }));
-  addEventListener('unhandledrejection', event => capture({type: 'rejection', message: text(event.reason)}));
+  addEventListener('unhandledrejection', event => capture({type: 'rejection', message: text(event.reason), stack:text(event.reason)}));
   for (const type of ['keydown', 'keyup', 'pointerdown']) {
     addEventListener(type, event => {
       // Record game controls only, not arbitrary text input.

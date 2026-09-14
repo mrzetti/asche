@@ -21,6 +21,15 @@ It routes the local web files over the test site's runtime; set `GAME_URL` to
 your deployment (without a trailing slash). Physical iOS/Android device testing
 is still useful for memory/performance and browser-specific fullscreen support.
 
+**Startup feedback:** a loading panel covers the blank canvas while downloading
+and booting. It reports actual per-file download bytes, elapsed time and the
+Windows startup phase. It clears when artwork appears (with a manual Show game
+fallback after 45 seconds). Loading may take a minute or more on phones.
+Recognizable extension-origin errors are retained separately in diagnostic
+reports and do not disable loading updates or claim an emulator failure.
+`tools/verify-loading.cjs` covers slow startup, progress, first artwork,
+extension errors and failed downloads.
+
 The original 1997 Rammstein game runs through Boxedwine and its stripped Wine 6.0 filesystem in the
 browser. The original executable, VB3 runtime, custom DLL and audio files are
 preserved in `assets/original/`; provenance is in `assets/SOURCES.md`.
