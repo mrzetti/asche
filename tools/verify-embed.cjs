@@ -37,9 +37,13 @@ const path = require('node:path');
     await page.waitForTimeout(200);
     await page.keyboard.up('Space');
     await frame.locator('#volume').fill('40');
-    assert.equal(await frame.locator('#music').evaluate(a=>a.volume),0.1);
-    await frame.getByRole('button',{name:'Disable music',exact:true}).click();
-    assert.equal(await frame.locator('#music').evaluate(a=>a.paused),true);
+    assert.equal(await frame.locator('audio, #music-toggle').count(),0);
+    assert.ok(Math.abs(await emulator.evaluate(async()=>{
+      const context=new AudioContext();
+      const gain=context.gameGain.gain.value;
+      await context.close();
+      return gain;
+    })-0.4)<0.001);
     await frame.getByRole('button',{name:'Fullscreen',exact:true}).click();
     assert.equal(await frame.evaluate(()=>document.fullscreenElement?.id),'game');
     await frame.evaluate(()=>document.exitFullscreen());

@@ -1,7 +1,7 @@
 # Compact Asche embed
 
 Use `https://YOUR-ASCHE-HOST/?embed=1` for the compact player. It includes a
-click-to-load title panel, volume, music toggle, fullscreen, restart and a link
+click-to-load title panel, volume, fullscreen, restart and a link
 to the full page. Nothing downloads from the emulator until Load game is clicked.
 The player fits the iframe height. Touch devices automatically get movement,
 jump and fire buttons; the toolbar's Touch controls toggle works on any device.

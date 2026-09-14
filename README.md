@@ -3,7 +3,7 @@
 Site: https://asche.rammwiki.mrzetti.com
 
 **Hosting on another VPS:** follow [HOSTING.md](HOSTING.md). All public runtime
-assets and the background song are included; this is a static nginx deployment.
+assets are included; this is a static nginx deployment with original game audio.
 
 **Compact wiki player:** add `?embed=1` to the site URL. See [EMBED.md](EMBED.md)
 for the click-to-load embed and its browser-isolation requirements.

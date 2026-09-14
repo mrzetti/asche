@@ -7,6 +7,8 @@ test -s fallback/web/boxedwine.zip
 test -s fallback/web/asche.zip
 install -d /var/www/asche/emulator
 cp -a web/. /var/www/asche/
+# Remove the retired, separately added soundtrack from older deployments.
+rm -f /var/www/asche/audio/asche-zu-asche.mp3 /var/www/asche/audio/README.md
 cp -a fallback/web/. /var/www/asche/emulator/
 install -m 0644 deploy/asche.rammwiki.mrzetti.com /etc/nginx/sites-available/asche.rammwiki.mrzetti.com
 nginx -t

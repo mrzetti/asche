@@ -19,8 +19,6 @@ if (document.documentElement.classList.contains('embed')) {
   document.getElementById('embed-splash').append(play);
 }
 const volume = document.getElementById('volume');
-const music = document.getElementById('music');
-const musicButton = document.getElementById('music-toggle');
 const crashButton = document.getElementById('crash-report');
 let crashReport;
 let loadingUI;
@@ -45,43 +43,9 @@ crashButton.addEventListener('click', () => {
   link.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 });
-let musicEnabled = true;
-try { musicEnabled = localStorage.getItem('asche-music') !== 'off'; } catch {}
-let musicReady = false;
-let musicTimer;
-function updateMusicButton() {
-  musicButton.textContent = musicEnabled ? 'Disable music' : 'Enable music';
-}
-async function playMusic() {
-  if (!musicEnabled || !musicReady) return;
-  try { await music.play(); } catch (error) {
-    // A browser may require a direct click in the parent page to unlock audio.
-    if (musicEnabled) {
-      musicButton.textContent = 'Play music';
-      status.textContent = error.name === 'NotAllowedError'
-        ? 'Click Play music to enable the background song.'
-        : 'The background song could not load. Click Play music to retry.';
-    }
-  }
-}
-musicButton.addEventListener('click', () => {
-  if (musicButton.textContent === 'Play music') {
-    updateMusicButton();
-    void playMusic();
-    return;
-  }
-  musicEnabled = !musicEnabled;
-  try { localStorage.setItem('asche-music', musicEnabled ? 'on' : 'off'); } catch {}
-  updateMusicButton();
-  if (musicEnabled) void playMusic();
-  else music.pause();
-});
-updateMusicButton();
 function applyVolume() {
   document.getElementById('volume-value').value = `${volume.value}%`;
   game.querySelector('iframe')?.contentWindow.setGameVolume?.(volume.value / 100);
-  // Keep music behind the original effects: 17.5% at the default master level.
-  music.volume = (volume.value / 100) * 0.25;
 }
 volume.addEventListener('input', applyVolume);
 applyVolume();
@@ -92,12 +56,7 @@ function startGame() {
     status.textContent = 'This game needs HTTPS and cross-origin isolation. The containing wiki page must enable COOP/COEP and permit cross-origin isolation for the iframe. Use Open full game to play separately.';
     return;
   }
-  clearTimeout(musicTimer);
   loadingUI?.dispose();
-  musicReady = false;
-  music.pause();
-  music.currentTime = 0;
-  updateMusicButton();
   const frame = document.createElement('iframe');
   frame.title = 'Asche zu Asche — original Windows game';
   // The wrapper owns fullscreen so the touch controls remain available.
@@ -117,14 +76,6 @@ function startGame() {
     `;
     doc.head.append(style);
     doc.getElementById('pointerLock').checked = false;
-    doc.getElementById('canvas').addEventListener('pointerdown', () => {
-      // Leave room for the original 2.36-second opening excerpt before the
-      // full track. Restart cancels this timer and resets the song.
-      musicTimer = setTimeout(() => {
-        musicReady = true;
-        void playMusic();
-      }, 2500);
-    }, { once: true });
     if (frame.contentWindow.ascheLoadingState) loadingUI?.update(frame.contentWindow.ascheLoadingState);
   });
   document.getElementById('game-screen').replaceChildren(frame);

@@ -2,7 +2,7 @@
 
 This is a static website: Windows/Wine/Boxedwine run in the visitor's browser,
 not on the VPS. The repository includes the pinned runtime, original game files,
-audio fix and quiet background song. No game build or backend service is needed.
+audio fix. No game build or backend service is needed.
 
 Use a dedicated HTTPS hostname, e.g. `asche.rammwiki.net`, pointed at the VPS.
 Ensure any AAAA record is correct and ports 80/443 reach nginx.
@@ -29,7 +29,7 @@ curl --fail -I "https://$HOST/"
 Keep nginx's standard MIME types enabled: `.wasm` should be application/wasm.
 Keep the supplied COOP/COEP/CORP headers. HTTPS plus cross-origin isolation is
 required for SharedArrayBuffer and the threaded runtime. All runtime assets are
-self-hosted; the first emulator download is roughly 40 MB, plus the song.
+self-hosted; the first emulator download is roughly 40 MB.
 Check certificate renewal with `certbot renew --dry-run`.
 
 ## Updating
@@ -40,15 +40,22 @@ cp -a web/. /var/www/asche/
 cp -a fallback/web/. /var/www/asche/emulator/
 ```
 
+When upgrading from the version with an added background song, also remove
+its obsolete deployed files (the original game's WAV effects are elsewhere):
+
+```sh
+rm -f /var/www/asche/audio/asche-zu-asche.mp3 /var/www/asche/audio/README.md
+```
+
 The top-level deploy.sh is for the original mrzetti.com server, not this new VPS.
 Keep the new VPS's nginx/TLS configuration. Serve at the hostname root; the
-wrapper uses `/emulator/` and `/audio/` URLs.
+wrapper uses `/emulator/` URLs.
 
 ## Verify
 
 Open the HTTPS site in a desktop browser, click Load game, wait for the title,
 and click it. Hold arrow keys to move/jump and Space to fire. Check effects,
-quiet background song, Disable music, volume, fullscreen and restart. A browser
+volume, fullscreen and restart. A browser
 console check of `crossOriginIsolated` should return true. If a runtime error
 occurs, Download crash report preserves the first failure for investigation.
 
@@ -69,6 +76,5 @@ iframe markup and the additional cross-origin policy configuration.
 
 Game provenance: assets/SOURCES.md. Boxedwine runtime provenance, pinned audio
 patch and licenses: fallback/web/PROVENANCE.md, AUDIO-FIX.md and licenses/.
-The song is an added website soundtrack (web/audio/README.md); original game
-assets and music retain their owners' rights. The historical wine-assembly
+Original game assets retain their owners' rights. The historical wine-assembly
 prototype under runtime/ is retained for research and is not served by the page.
