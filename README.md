@@ -71,10 +71,14 @@ The game polls keyboard state periodically: automated tests must hold keys
 Losing the last life shows the original game-over screen. The wrapper watches
 the game canvas and, after a short countdown, reloads the emulator on its own so
 a new game starts without a click; **Play again now** skips the wait and **Stay
-on this screen** keeps the original screen visible. `node tools/verify-restart.cjs`
-checks the detection, the countdown and the reload against the real game
-(`ASCHE_URL` and the optional `PLAYWRIGHT_MODULE`/`BROWSER_PATH` select the
-target, as with the other tools).
+on this screen** keeps the original screen visible. The wrapper compares each
+frame with the exact game-over bitmap extracted from the executable and only
+acts when that screen persists for several seconds, so level-loading and
+transition screens cannot trigger it; if the screen changes before the countdown
+ends, the restart is cancelled. `node tools/verify-restart.cjs` checks the
+detection, the transient-screen guard, the countdown and the reload against the
+real game (`ASCHE_URL` and the optional `PLAYWRIGHT_MODULE`/`BROWSER_PATH` select
+the target, as with the other tools).
 
 Sound is enabled, with a 0–100% volume slider (0 mutes). The SDL sample-rate
 query now proxies from the Wine pthread to the main thread where AudioContext

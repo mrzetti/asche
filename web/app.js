@@ -26,7 +26,8 @@ let gameOverWatch;
 let gameOverTimer;
 let gameOverDismissed = false;
 
-const GAME_OVER_RESTART_SECONDS = 5;
+const GAME_OVER_CONFIRM_MS = 6000;
+const GAME_OVER_RESTART_SECONDS = 3;
 const GAME_OVER_POLL_MS = 800;
 window.addEventListener('message', event => {
   const frame = game.querySelector('iframe');
@@ -109,17 +110,19 @@ function looksLikeGameOver(luminance) {
 }
 
 function watchForGameOver(frame) {
-  let hits = 0;
+  let matchedSince = 0;
   gameOverWatch = setInterval(() => {
     if (gameOverDismissed || document.getElementById('game-over')) return;
-    const pixels = sampleGameCanvas(frame);
-    if (!pixels) return;
-    if (looksLikeGameOver(pixels)) {
-      hits += 1;
-      if (hits >= 2) showGameOver(frame);
-    } else {
-      hits = 0;
+    const luminance = sampleGameCanvas(frame);
+    if (!luminance || !looksLikeGameOver(luminance)) {
+      matchedSince = 0;
+      return;
     }
+    if (!matchedSince) matchedSince = Date.now();
+    // The final game-over screen waits for a key press, so only a screen that
+    // stays game-over for several seconds is treated as a real game over.
+    // Loading/transition screens clear themselves well before this.
+    if (Date.now() - matchedSince >= GAME_OVER_CONFIRM_MS) showGameOver(frame);
   }, GAME_OVER_POLL_MS);
 }
 

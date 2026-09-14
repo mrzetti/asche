@@ -53,7 +53,23 @@ const path=require('node:path');
   await page.locator('.game-loading').waitFor({state:'detached',timeout:180000});
   assert.equal(await page.locator('#game-over').count(),0,'overlay stayed after the restart');
   assert.match(await page.locator('#status').textContent(),/Tap the title screen/);
+
+  // A transient screen that matches the game-over bitmap (a loading screen)
+  // must not restart the game: the persistence gate delays the overlay and
+  // the countdown re-check cancels it once the screen changes.
+  await page.evaluate(()=>{
+   window.__originalSampler=sampleGameCanvas;
+   sampleGameCanvas=()=>Float32Array.from(GAME_OVER_LUMINANCE);
+  });
+  await page.waitForTimeout(3000);
+  assert.equal(await page.locator('#game-over').count(),0,'persistence gate did not delay the overlay');
+  await page.locator('#game-over').waitFor({state:'visible',timeout:8000});
+  await page.evaluate(()=>{sampleGameCanvas=window.__originalSampler;});
+  await page.locator('#game-over').waitFor({state:'detached',timeout:10000});
+  assert.match(await page.locator('#status').textContent(),/cancelled/);
+  assert.equal(await page.locator('.game-loading').isVisible(),false,'false positive reloaded the emulator');
+
   assert.deepEqual(errors,[]);
-  console.log('PASS: game-over detection, countdown and automatic emulator restart');
+  console.log('PASS: game-over detection, countdown, automatic restart and transient-match guard');
  } finally {await browser.close();}
 })();
