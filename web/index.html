@@ -49,6 +49,14 @@
     html.embed #embed-splash { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 20px; text-align: center; background: radial-gradient(ellipse at center, #32362a, #0b0c0b 80%); }
     #embed-splash strong { font-size: clamp(1.5rem, 5vw, 2.6rem); line-height: 1.1; }
     #embed-splash p { margin: 0; color: #afafa7; font-size: .85rem; }
+    .game-over { position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 20px; background: rgba(8, 9, 7, .78); text-align: center; }
+    .game-over strong { font-size: clamp(1.5rem, 5vw, 2.6rem); line-height: 1.1; color: #e8857a; letter-spacing: .06em; text-transform: uppercase; }
+    .game-over p { margin: 0; color: #deded7; font-size: .9rem; }
+    .game-over-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+    .game-over button { font: inherit; cursor: pointer; color: #eee; background: #33362d; border: 1px solid #6c6d58; padding: 8px 18px; border-radius: 4px; }
+    .game-over button:hover { background: #454939; }
+    .game-over button.primary { background: #4b5138; border-color: #8c8f6b; }
+    .game-over button:focus-visible { outline: 3px solid #c9c482; outline-offset: 3px; }
   </style>
   <link rel="stylesheet" href="/touch-controls.css">
   <script>if (new URLSearchParams(location.search).get('embed') === '1') document.documentElement.classList.add('embed');</script>

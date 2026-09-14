@@ -22,6 +22,12 @@ const volume = document.getElementById('volume');
 const crashButton = document.getElementById('crash-report');
 let crashReport;
 let loadingUI;
+let gameOverWatch;
+let gameOverTimer;
+let gameOverDismissed = false;
+
+const GAME_OVER_RESTART_SECONDS = 5;
+const GAME_OVER_POLL_MS = 800;
 window.addEventListener('message', event => {
   const frame = game.querySelector('iframe');
   if (event.origin !== location.origin || event.source !== frame?.contentWindow) return;
@@ -50,8 +56,105 @@ function applyVolume() {
 volume.addEventListener('input', applyVolume);
 applyVolume();
 
+function clearGameOverUi() {
+  gameOverDismissed = false;
+  if (gameOverWatch) {
+    clearInterval(gameOverWatch);
+    gameOverWatch = undefined;
+  }
+  if (gameOverTimer) {
+    clearInterval(gameOverTimer);
+    gameOverTimer = undefined;
+  }
+  document.getElementById('game-over')?.remove();
+}
+
+function sampleGameCanvas(frame) {
+  const canvas = frame.contentDocument?.getElementById('canvas');
+  if (!canvas?.width || !canvas?.height) return null;
+  const sample = document.createElement('canvas');
+  sample.width = 64;
+  sample.height = 48;
+  const context = sample.getContext('2d', {willReadFrequently: true});
+  context.drawImage(canvas, 0, 0, 64, 48);
+  return context.getImageData(0, 0, 64, 48).data;
+}
+
+// The game-over form is a black screen with red "game over" lettering in the
+// middle. The title screen and level HUDs always keep bright artwork outside
+// that band (logo, sky, HUD), so they cannot match.
+function looksLikeGameOver(pixels) {
+  let dark = 0;
+  let red = 0;
+  let brightOutside = 0;
+  let total = 0;
+  for (let y = 0; y < 48; y++) {
+    for (let x = 0; x < 64; x++) {
+      const index = (y * 64 + x) * 4;
+      const r = pixels[index];
+      const g = pixels[index + 1];
+      const b = pixels[index + 2];
+      total += 1;
+      if (r + g + b < 60) dark += 1;
+      else if (y < 15 || y > 33) brightOutside += 1;
+      if (y >= 15 && y <= 33 && r > 80 && r > g * 1.6 && r > b * 1.6) red += 1;
+    }
+  }
+  return dark / total > 0.9 && red >= 4 && brightOutside <= 3;
+}
+
+function watchForGameOver(frame) {
+  let hits = 0;
+  gameOverWatch = setInterval(() => {
+    if (gameOverDismissed || document.getElementById('game-over')) return;
+    const pixels = sampleGameCanvas(frame);
+    if (!pixels) return;
+    if (looksLikeGameOver(pixels)) {
+      hits += 1;
+      if (hits >= 2) showGameOver(frame);
+    } else {
+      hits = 0;
+    }
+  }, GAME_OVER_POLL_MS);
+}
+
+function showGameOver() {
+  if (document.getElementById('game-over')) return;
+  if (gameOverWatch) {
+    clearInterval(gameOverWatch);
+    gameOverWatch = undefined;
+  }
+  const overlay = document.createElement('div');
+  overlay.id = 'game-over';
+  overlay.className = 'game-over';
+  overlay.innerHTML = '<strong>Game over</strong>' +
+    '<p>Starting a new game in <span id="game-over-count">' + GAME_OVER_RESTART_SECONDS + '</span> s\u2026</p>' +
+    '<div class="game-over-actions">' +
+    '<button type="button" class="primary" id="game-over-now">Play again now</button>' +
+    '<button type="button" id="game-over-stay">Stay on this screen</button>' +
+    '</div>';
+  document.getElementById('game-screen').append(overlay);
+  status.textContent = 'Game over. A new game starts automatically; press Play again now to skip the wait.';
+  let remaining = GAME_OVER_RESTART_SECONDS;
+  gameOverTimer = setInterval(() => {
+    remaining -= 1;
+    const counter = document.getElementById('game-over-count');
+    if (counter) counter.textContent = String(Math.max(0, remaining));
+    if (remaining <= 0) startGame();
+  }, 1000);
+  document.getElementById('game-over-now').addEventListener('click', startGame);
+  document.getElementById('game-over-stay').addEventListener('click', () => {
+    if (gameOverTimer) clearInterval(gameOverTimer);
+    gameOverTimer = undefined;
+    overlay.remove();
+    gameOverDismissed = true;
+    status.textContent = 'Game over. Restart game to play again.';
+  });
+}
+
 function startGame() {
   controls.releaseAll();
+  clearGameOverUi();
   if (!window.crossOriginIsolated) {
     status.textContent = 'This game needs HTTPS and cross-origin isolation. The containing wiki page must enable COOP/COEP and permit cross-origin isolation for the iframe. Use Open full game to play separately.';
     return;
@@ -81,6 +184,7 @@ function startGame() {
   document.getElementById('game-screen').replaceChildren(frame);
   loadingUI = createAscheLoading(document.getElementById('game-screen'), frame, () => {
     status.textContent = 'Tap the title screen to start. Use the arrow keys or touch controls to play.';
+    if (!gameOverDismissed) watchForGameOver(frame);
   });
   play.hidden = true;
 }

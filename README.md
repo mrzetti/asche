@@ -68,6 +68,14 @@ fire. Escape quits the original game; the wrapper's Restart button reloads it.
 The game polls keyboard state periodically: automated tests must hold keys
 (150 ms or longer) rather than sending an instantaneous key press.
 
+Losing the last life shows the original game-over screen. The wrapper watches
+the game canvas and, after a short countdown, reloads the emulator on its own so
+a new game starts without a click; **Play again now** skips the wait and **Stay
+on this screen** keeps the original screen visible. `node tools/verify-restart.cjs`
+checks the detection, the countdown and the reload against the real game
+(`ASCHE_URL` and the optional `PLAYWRIGHT_MODULE`/`BROWSER_PATH` select the
+target, as with the other tools).
+
 Sound is enabled, with a 0–100% volume slider (0 mutes). The SDL sample-rate
 query now proxies from the Wine pthread to the main thread where AudioContext
 lives. This fixes the exception that caused the earlier Wine audio-lock timeout.

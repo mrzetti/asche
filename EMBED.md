@@ -7,6 +7,12 @@ The player fits the iframe height. Touch devices automatically get movement,
 jump and fire buttons; the toolbar's Touch controls toggle works on any device.
 The buttons remain within the fullscreen game and accept simultaneous fingers.
 
+Losing the last life triggers the wrapper's own **Game over** overlay: after a
+short countdown the emulator reloads automatically, or the visitor can choose
+**Play again now** or **Stay on this screen**. This works the same in embeds,
+standalone play and fullscreen; nothing downloads until the loading panel runs
+again.
+
 ```html
 <iframe src="https://asche.rammwiki.net/?embed=1"
   title="Play Asche zu Asche" width="100%" height="680"
