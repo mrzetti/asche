@@ -27,11 +27,13 @@ the wiki must also allow the game's origin. A subdomain alone does not enable
 isolation. The wrapper checks isolation before starting the emulator and gives
 a message/link when it is unavailable.
 
-The default standalone nginx template uses CORP `same-origin`. For embedding
-across subdomains on the same HTTPS site (e.g. rammwiki.net → asche.rammwiki.net),
-adjust Asche's CORP header to `same-site`. For genuinely different sites, a
-compatible `cross-origin` policy is needed instead. Test the actual wiki page:
-COEP also affects the wiki's images, scripts and other embeds. The compact view
+The shipped nginx template sets CORP `same-site` so sibling subdomains (for
+example `flashcards.rammwiki.mrzetti.com`, which embeds the compact player) can
+frame the game; genuinely different sites still cannot. A stricter `same-origin`
+policy also works when only the standalone site is used. For a genuinely
+different embedding site, a compatible `cross-origin` policy is needed instead.
+Test the actual host page: COEP also affects the host's images, scripts and
+other embeds. The compact view
 does not automatically change server policies.
 
 The browser check verifies a same-origin, isolated parent with nested wrapper

@@ -8,6 +8,11 @@ assets are included; this is a static nginx deployment with original game audio.
 **Compact wiki player:** add `?embed=1` to the site URL. See [EMBED.md](EMBED.md)
 for the click-to-load embed and its browser-isolation requirements.
 
+**Flashcards desktop:** the same compact player is embedded in the RammWiki
+Flashcards desktop (catalog id `1997-asche-zu-asche`). That host is
+cross-origin isolated and the nginx template ships CORP `same-site`, so the
+sibling subdomain can frame the game while other sites cannot.
+
 **Touch controls:** mobile/touch devices automatically show Left, Right, Jump
 and Fire buttons below the playfield, including in embeds and fullscreen.
 The toolbar toggle can enable them on any device. Multiple fingers can hold

@@ -57,6 +57,10 @@ Content-Type: application/wasm   for .wasm
 Content-Type: application/zip    for .zip
 ```
 
+The nginx deployment template relaxes CORP to `same-site` so the sibling
+Flashcards desktop can embed the game; the local dev server above stays
+`same-origin`.
+
 `tools/static-server.mjs` (the existing project dev server) already sends these;
 `fallback/web/server.mjs` is a standalone copy:
 

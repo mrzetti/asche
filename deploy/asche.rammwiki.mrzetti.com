@@ -7,7 +7,9 @@ server {
     add_header Referrer-Policy strict-origin-when-cross-origin always;
     add_header Cross-Origin-Opener-Policy same-origin always;
     add_header Cross-Origin-Embedder-Policy require-corp always;
-    add_header Cross-Origin-Resource-Policy same-origin always;
+    # same-site lets the sibling Flashcards desktop frame the game; genuinely
+    # different sites still cannot load it.
+    add_header Cross-Origin-Resource-Policy same-site always;
 
     location / {
         try_files $uri $uri/ =404;

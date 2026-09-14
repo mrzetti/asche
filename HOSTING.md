@@ -28,7 +28,9 @@ curl --fail -I "https://$HOST/"
 
 Keep nginx's standard MIME types enabled: `.wasm` should be application/wasm.
 Keep the supplied COOP/COEP/CORP headers. HTTPS plus cross-origin isolation is
-required for SharedArrayBuffer and the threaded runtime. All runtime assets are
+required for SharedArrayBuffer and the threaded runtime. CORP `same-site` lets
+sibling subdomains such as the Flashcards desktop frame the game; use
+`same-origin` only when nothing embeds it. All runtime assets are
 self-hosted; the first emulator download is roughly 40 MB.
 Check certificate renewal with `certbot renew --dry-run`.
 
